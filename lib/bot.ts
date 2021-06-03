@@ -20,21 +20,25 @@ bot.command('start', async (ctx) => {
 
   try {
     const user = await prisma.user.findUnique({ where: { telegramChatId } })
-    if (user) {
-      await ctx.reply(`Welcome to telegram bot, your token is ${user.token}`)
+    if (!user?.token) {
+      const token = v4()
+      await prisma.user.upsert({
+        where: {
+          telegramChatId,
+        },
+        update: {
+          token,
+        },
+        create: {
+          telegramChatId,
+          token,
+        },
+      })
+      await ctx.reply(`Create successfully, your token is ${token}`)
       return
     }
 
-    // generate new token
-    const token = v4()
-    await prisma.user.create({
-      data: {
-        telegramChatId,
-        token,
-      },
-    })
-
-    await ctx.reply(`Welcome to telegram bot, your token is ${token}`)
+    await ctx.reply(`Token already exists, your token is ${user.token}`)
   } catch (err) {
     debug(err)
     await ctx.reply('Internal Server Error \n Please try again')
@@ -51,7 +55,7 @@ bot.command('token', async (ctx) => {
       where: { telegramChatId },
     })
 
-    if (!user) {
+    if (!user?.token) {
       await ctx.reply(
         `You don't have any token \n Use the /start command to generate your token`
       )
@@ -75,14 +79,17 @@ bot.command('revoke', async (ctx) => {
       where: { telegramChatId },
     })
 
-    if (!user) {
+    if (!user?.token) {
       await ctx.reply(`You don't have any token`)
       return
     }
 
-    await prisma.user.delete({
+    await prisma.user.update({
       where: {
         id: user.id,
+      },
+      data: {
+        token: null,
       },
     })
 
