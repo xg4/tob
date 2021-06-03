@@ -1,15 +1,19 @@
 import { PrismaClient } from '@prisma/client'
 import { NextApiHandler } from 'next'
 import { bot } from '../../lib/bot'
+import { prisma } from '../../lib/prisma'
 
 const debug = require('debug')('api:push')
 
 const handler: NextApiHandler = async (req, res) => {
   const { token, content, type } = req.body
 
-  try {
-    const prisma = new PrismaClient()
+  if (![token, content, type].every(Boolean)) {
+    res.status(422).json('Invalid parameters')
+    return
+  }
 
+  try {
     const user = await prisma.user.findUnique({ where: { token } })
 
     if (!user) {
