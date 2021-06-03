@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client'
 import { NextApiHandler } from 'next'
 import { bot } from '../../lib/bot'
 import { prisma } from '../../lib/prisma'
@@ -8,7 +7,7 @@ const debug = require('debug')('api:push')
 const handler: NextApiHandler = async (req, res) => {
   const { token, content, type } = req.body
 
-  if (![token, content, type].every(Boolean)) {
+  if (![token, content].every(Boolean)) {
     res.status(422).json('Invalid parameters')
     return
   }
