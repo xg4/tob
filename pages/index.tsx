@@ -25,6 +25,33 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-100 pt-10">
+      <div className="max-w-md mx-auto bg-white shadow-md rounded-3xl p-5 mb-10">
+        <div className="mb-2 space-y-2">
+          <h3>Step 1:</h3>
+          <p className="text-sm">
+            Go to{' '}
+            <a
+              href="https://t.me/tob2pbot"
+              target="_blank"
+              className="text-green-500 underline hover:no-underline"
+            >
+              t.me/tob2pbot
+            </a>{' '}
+            and follow the bot.
+          </p>
+        </div>
+        <div className="mb-2 space-y-2">
+          <h3>Step 2:</h3>
+          <p className="text-sm">Enter the /start command to get your token.</p>
+        </div>
+        <div className="mb-2 space-y-2">
+          <h3>Step 3:</h3>
+          <p className="text-sm">
+            Then enter the token and content in the form and you can receive
+            messages on Telegram.
+          </p>
+        </div>
+      </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="max-w-md mx-auto bg-white shadow-md rounded-3xl p-5"
