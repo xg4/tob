@@ -16,13 +16,14 @@ const handler: NextApiHandler = async (req, res) => {
     const user = await prisma.user.findUnique({ where: { token } })
 
     if (!user) {
-      res.status(404).json(`no such token: ${token}`)
+      res.status(404).json(`Invalid token: ${token}`)
       return
     }
 
     const chatId = user.telegramChatId
 
     await bot.telegram.sendMessage(chatId, content, { parse_mode: type })
+    res.status(200).json('Send successfully')
   } catch (err) {
     debug(err)
     res.status(500).end()
